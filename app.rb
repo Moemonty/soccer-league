@@ -12,8 +12,8 @@ end
 
 def read_from_argument(filename)
   team_obj = {}
-
   line_count = 0
+  match_day = 0
 
   File.open(filename, 'r') do |file|
     file.each_line do |line|
@@ -21,8 +21,8 @@ def read_from_argument(filename)
     end
   end
 
-  # We have line count
   curr_line = 1
+  # We have line count
   # depending on the size of the input
   # we can say that we can there will be half that many lines of output
   # and we know there are always two teams playing, we divide by that
@@ -63,17 +63,16 @@ def read_from_argument(filename)
         team_obj[team_2_name] += result[:score]
       end
 
+      # Determined when to print from input (current line / matches / teams per match) 12 / 2 / 2 == 3
       if curr_line % match_day_end == 0
-        puts "==========================================="
+        match_day += 1
+        puts "Match Day #{match_day}"
         parse_and_print_matchday(team_obj)
+        puts "\n"
       end
 
       curr_line += 1
     end
-
-    # puts "#{team_obj.size}"
-    # parse_and_print_matchday(team_obj)
-    # Could just count the number of keys in the object, divide by two, then print out matches every object.length / 2 days
   end
 end
 
@@ -111,7 +110,6 @@ def parse_and_print_matchday(team_obj)
   top_teams.each do |key, val|
     result << "#{key}, #{val} pts"
   end
-
 
   result.each do |r|
     puts r
