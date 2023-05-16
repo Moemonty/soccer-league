@@ -20,32 +20,13 @@ def read_from_argument(filename)
 
   File.open(filename, 'r') do |file|
     file.each_line do |match|
-      # For each line, split by comman
       match_details = match.split(',')
-
       team_1 = match_details[0]
       team_2 = match_details[1]
-
       team_1_name = team_1.gsub(/\d/, '').strip
       team_1_score = team_1[/\d+/]
-
       team_2_name = team_2.gsub(/\d/, '').strip
       team_2_score = team_2[/\d+/]
-
-
-      # IF ONE TEAM ALREADY EXISTS, THEY ALL EXIST, so report team object and clear out that day's info
-      # if team_obj.has_key?(team_1_name)
-      #   match_day_count += 1
-      #   puts "Matchday #{match_day_count}"
-      #   results = parse_and_print_matchday(team_obj)
-      #   results.each do |result|
-      #     puts result
-      #   end
-      #
-      #   #clear out team_obj
-      #   team_obj = {}
-      #   next
-      # end
 
       result = determine_winner_and_score(team_1_score, team_2_score)
 
@@ -72,11 +53,7 @@ def read_from_argument(filename)
     end
   end
 
-  results = parse_and_print_matchday(team_obj)
-
-  results.each do |result|
-    puts result
-  end
+  parse_and_print_matchday(team_obj)
 end
 
 def read_from_stdin
@@ -84,6 +61,7 @@ def read_from_stdin
     puts line.chomp
   end
 end
+
 
 def determine_winner_and_score(team1_score, team2_score)
   if team1_score > team2_score
@@ -113,7 +91,10 @@ def parse_and_print_matchday(team_obj)
     result << "#{key}, #{val} pts"
   end
 
-  result
+
+  result.each do |r|
+    puts r
+  end
 end
 
 def read_from_file
