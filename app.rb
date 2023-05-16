@@ -10,13 +10,25 @@ def parse
   end
 end
 
-# If a team's name repeats, we know that a new matchday has started
-def get_match_info
-end
-
 def read_from_argument(filename)
   team_obj = {}
-  match_day_count = 0
+
+  line_count = 0
+
+  File.open(filename, 'r') do |file|
+    file.each_line do |line|
+      line_count += 1
+    end
+  end
+
+  # We have line count
+  curr_line = 1
+  # depending on the size of the input
+  # we can say that we can there will be half that many lines of output
+  # and we know there are always two teams playing, we divide by that
+  # so Lines of input / Half, one outcome per line of input / and divided again by 2, because two teams
+  # so 24 lines of input would results in (12 / 2 / 2) == 3
+  match_day_end = (line_count / 2) / 2
 
   File.open(filename, 'r') do |file|
     file.each_line do |match|
@@ -50,10 +62,19 @@ def read_from_argument(filename)
         team_obj[team_1_name] += result[:score]
         team_obj[team_2_name] += result[:score]
       end
-    end
-  end
 
-  parse_and_print_matchday(team_obj)
+      if curr_line % match_day_end == 0
+        puts "==========================================="
+        parse_and_print_matchday(team_obj)
+      end
+
+      curr_line += 1
+    end
+
+    # puts "#{team_obj.size}"
+    # parse_and_print_matchday(team_obj)
+    # Could just count the number of keys in the object, divide by two, then print out matches every object.length / 2 days
+  end
 end
 
 def read_from_stdin
