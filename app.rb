@@ -2,7 +2,8 @@ def parse
   # Get Filename if passed as argument
   if ARGV[0]
     filename = ARGV[0]
-    read_from_argument(filename)
+    result = read_from_argument(filename)
+    puts result
   else
     if $stdin
       read_from_stdin
@@ -13,7 +14,6 @@ end
 # If a team's name repeats, we know that a new matchday has started
 def get_match_info
 end
-
 
 def read_from_argument(filename)
   team_obj = {}
@@ -35,37 +35,44 @@ def read_from_argument(filename)
 
 
       # IF ONE TEAM ALREADY EXISTS, THEY ALL EXIST, so report team object and clear out that day's info
-      if team_obj.has_key?(team_1_name)
-        match_day_count += 1
-        puts "Matchday #{match_day_count}"
-        results = parse_and_print_matchday(team_obj)
-        results.each do |result|
-          puts result
-        end
-
-        #clear out team_obj
-        # team_obj = {}
-      end
+      # if team_obj.has_key?(team_1_name)
+      #   match_day_count += 1
+      #   puts "Matchday #{match_day_count}"
+      #   results = parse_and_print_matchday(team_obj)
+      #   results.each do |result|
+      #     puts result
+      #   end
+      #
+      #   #clear out team_obj
+      #   team_obj = {}
+      #   next
+      # end
 
       result = determine_winner_and_score(team_1_score, team_2_score)
 
-      # initialize if don't exist || IF THEY DO Exist, its another match day
-      if !team_obj[team_1_name] && !team_obj[team_2_name]
-        if result[:winner] == 1
-          team_obj[team_1_name] = result[:score]
-          team_obj[team_2_name] = 0
-        end
-        if result[:winner] == 2
-          team_obj[team_2_name] = result[:score]
-          team_obj[team_1_name] = 0
-        end
-        if result[:winner] == "tied"
-          team_obj[team_1_name] = result[:score]
-          team_obj[team_2_name] = result[:score]
-        end
+      if !team_obj.has_key?(team_1_name)
+        team_obj[team_1_name] = 0
       end
 
+      if !team_obj.has_key?(team_2_name)
+        team_obj[team_2_name] = 0
+      end
 
+      if result[:winner] == 1
+        team_obj[team_1_name] += result[:score]
+        team_obj[team_2_name] += 0
+      end
+      if result[:winner] == 2
+        team_obj[team_2_name] += result[:score]
+        team_obj[team_1_name] += 0
+      end
+      if result[:winner] == 0
+        team_obj[team_1_name] += result[:score]
+        team_obj[team_2_name] += result[:score]
+      end
+
+      puts team_obj
+      team_obj
     end
   end
 end
@@ -81,12 +88,12 @@ def determine_winner_and_score(team1_score, team2_score)
     return { winner: 1, score: 3}
   end
 
-  if team2_score > team2_score
+  if team2_score > team1_score
     return { winner: 2, score: 3}
   end
 
   if team1_score == team2_score
-    return { winner: 'tied', score: 1}
+    return { winner: 0, score: 1}
   end
 end
 
