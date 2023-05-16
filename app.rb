@@ -2,8 +2,7 @@ def parse
   # Get Filename if passed as argument
   if ARGV[0]
     filename = ARGV[0]
-    result = read_from_argument(filename)
-    puts result
+    read_from_argument(filename)
   else
     if $stdin
       read_from_stdin
@@ -70,10 +69,13 @@ def read_from_argument(filename)
         team_obj[team_1_name] += result[:score]
         team_obj[team_2_name] += result[:score]
       end
-
-      puts team_obj
-      team_obj
     end
+  end
+
+  results = parse_and_print_matchday(team_obj)
+
+  results.each do |result|
+    puts result
   end
 end
 
