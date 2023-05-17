@@ -30,7 +30,7 @@ Run via an argument:
 `ruby app.rb sample-input.txt`
 
 
-### To run test:
+### To run tests:
 Go to root directory and below in terminal/iterm2, etc.
 
 `rspec spec/app_spec.rb`
