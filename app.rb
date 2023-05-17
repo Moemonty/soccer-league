@@ -139,8 +139,6 @@ class App
       puts r
     end
   end
-
-  main
 end
 
 App.main
