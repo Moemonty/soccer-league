@@ -95,35 +95,28 @@ def read_from_stdin(matches, line_count)
   match_day_end = (line_count / 2) / 2
 
   matches.each do |match|
-    match_details = match.split(',')
-    team_1 = match_details[0]
-    team_2 = match_details[1]
-    team_1_name = team_1.gsub(/\d/, '').strip
-    team_1_score = team_1[/\d+/]
-    team_2_name = team_2.gsub(/\d/, '').strip
-    team_2_score = team_2[/\d+/]
+    match_info = parse_match_info(match)
+    result = determine_winner_and_score(match_info[:team_1_score], match_info[:team_2_score])
 
-    result = determine_winner_and_score(team_1_score, team_2_score)
-
-    if !team_obj.has_key?(team_1_name)
-      team_obj[team_1_name] = 0
+    if !team_obj.has_key?(match_info[:team_1_name])
+      team_obj[match_info[:team_1_name]] = 0
     end
 
-    if !team_obj.has_key?(team_2_name)
-      team_obj[team_2_name] = 0
+    if !team_obj.has_key?(match_info[:team_2_name])
+      team_obj[match_info[:team_2_name]] = 0
     end
 
     if result[:winner] == 1
-      team_obj[team_1_name] += result[:score]
-      team_obj[team_2_name] += 0
+      team_obj[match_info[:team_1_name]] += result[:score]
+      team_obj[match_info[:team_2_name]] += 0
     end
     if result[:winner] == 2
-      team_obj[team_2_name] += result[:score]
-      team_obj[team_1_name] += 0
+      team_obj[match_info[:team_2_name]] += result[:score]
+      team_obj[match_info[:team_1_name]] += 0
     end
     if result[:winner] == 0
-      team_obj[team_1_name] += result[:score]
-      team_obj[team_2_name] += result[:score]
+      team_obj[match_info[:team_1_name]] += result[:score]
+      team_obj[match_info[:team_2_name]] += result[:score]
     end
 
     # Determined when to print from input (current line / matches / teams per match) 12 / 2 / 2 == 3
@@ -138,6 +131,22 @@ def read_from_stdin(matches, line_count)
   end
 end
 
+def parse_match_info(match)
+  match_details = match.split(',')
+  team_1 = match_details[0]
+  team_2 = match_details[1]
+  team_1_name = team_1.gsub(/\d/, '').strip
+  team_1_score = team_1[/\d+/]
+  team_2_name = team_2.gsub(/\d/, '').strip
+  team_2_score = team_2[/\d+/]
+
+  return {
+    team_1_name: team_1_name,
+    team_1_score: team_1_score,
+    team_2_name: team_2_name,
+    team_2_score: team_2_score
+  }
+end
 
 def determine_winner_and_score(team1_score, team2_score)
   if team1_score > team2_score
