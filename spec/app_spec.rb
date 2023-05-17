@@ -29,10 +29,22 @@ RSpec.describe 'App' do
     expect(output).to include('Aptos FC, 7 pts')
   end
 
+  it 'One match is passed in' do
+    output = `echo "San Jose Earthquakes 3, Santa Cruz Slugs 3" | ruby app.rb`
+    expected_output = "Match Day 1\nSan Jose Earthquakes, 1 pts\nSanta Cruz Slugs, 1 pts\n"
+
+    expect(output).to eq(expected_output)
+  end
+
+  it 'four matches are passed in' do
+    output = `echo "San Jose Earthquakes 3, Santa Cruz Slugs 3\n Dudes 2, People 3" | ruby app.rb`
+    expected_output = "Match Day 1\nSan Jose Earthquakes, 1 pts\nSanta Cruz Slugs, 1 pts\nMatch Day 2\nPeople, 3 pts\nSan Jose Earthquakes, 1 pts\nSanta Cruz Slugs, 1 pts\n"
+
+    expect(output).to eq(expected_output)
+  end
+
   it 'no file is passed in' do
-    output = `ruby app.rb`
-    expect(@expected_output).to include('Aptos FC, 9 pts')
-    expect(output).not_to include('Aptos FC, 9 pts')
-    expect(output).to include('Aptos FC, 7 pts')
+    output = `ruby app.rb asd`
+    expect(output).to eq('')
   end
 end

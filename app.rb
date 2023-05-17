@@ -1,6 +1,5 @@
 class App
   def self.main
-    # Get Filename if passed as argument
     if ARGV[0]
       filename = ARGV[0]
       array_of_lines = []
@@ -76,11 +75,17 @@ class App
       end
 
       # Determined when to print from input (current line / matches / teams per match) 12 / 2 / 2 == 3
-      if curr_line % match_day_end == 0
+      if match_day_end >= 1
+        if curr_line % match_day_end == 0
+          match_day += 1
+          puts "Match Day #{match_day}"
+          parse_and_print_matchday(team_obj)
+          puts "\n"
+        end
+      elsif match_day_end == 0
         match_day += 1
         puts "Match Day #{match_day}"
         parse_and_print_matchday(team_obj)
-        puts "\n"
       end
 
       curr_line += 1
