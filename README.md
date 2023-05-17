@@ -3,7 +3,7 @@
 ## Ruby Version
 Built using Ruby 3.2.2
 
-## Depenencies:
+## Dependencies:
 
 Install Rspec
 `gem install rspec`
