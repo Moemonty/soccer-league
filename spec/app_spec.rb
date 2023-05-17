@@ -45,6 +45,6 @@ RSpec.describe 'App' do
 
   it 'no file is passed in' do
     output = `ruby app.rb asd`
-    expect(output).to eq('')
+    expect(output).to eq("There is no file named asd\nPlease try a different file name\n")
   end
 end

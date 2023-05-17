@@ -5,6 +5,15 @@ class App
       array_of_lines = []
       line_count = 0
 
+      script_dir = File.dirname(File.realpath(__FILE__))
+      check_file_name = File.join(script_dir, filename)
+
+      if !File.exist?(check_file_name.chomp) # remove \n line
+        puts "There is no file named #{filename}"
+        puts "Please try a different file name"
+        return
+      end
+
       File.open(filename, 'r') do |file|
         file.each_line do |line|
           array_of_lines << line
