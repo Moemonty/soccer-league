@@ -4,8 +4,16 @@ def parse
     filename = ARGV[0]
     read_from_argument(filename)
   else
+    array_of_lines = []
+    line_count = 0
+
     if $stdin
-      read_from_stdin
+      ARGF.each_line do |line|
+        array_of_lines << line
+        line_count += 1
+      end
+
+      read_from_stdin(array_of_lines, line_count)
     end
   end
 end
@@ -76,9 +84,57 @@ def read_from_argument(filename)
   end
 end
 
-def read_from_stdin
-  $stdin.each_line do |line|
-    puts line.chomp
+def read_from_stdin(matches, line_count)
+  team_obj = {}
+  match_day = 0
+  line_count = line_count
+
+  puts line_count
+
+  curr_line = 1
+  match_day_end = (line_count / 2) / 2
+
+  matches.each do |match|
+    match_details = match.split(',')
+    team_1 = match_details[0]
+    team_2 = match_details[1]
+    team_1_name = team_1.gsub(/\d/, '').strip
+    team_1_score = team_1[/\d+/]
+    team_2_name = team_2.gsub(/\d/, '').strip
+    team_2_score = team_2[/\d+/]
+
+    result = determine_winner_and_score(team_1_score, team_2_score)
+
+    if !team_obj.has_key?(team_1_name)
+      team_obj[team_1_name] = 0
+    end
+
+    if !team_obj.has_key?(team_2_name)
+      team_obj[team_2_name] = 0
+    end
+
+    if result[:winner] == 1
+      team_obj[team_1_name] += result[:score]
+      team_obj[team_2_name] += 0
+    end
+    if result[:winner] == 2
+      team_obj[team_2_name] += result[:score]
+      team_obj[team_1_name] += 0
+    end
+    if result[:winner] == 0
+      team_obj[team_1_name] += result[:score]
+      team_obj[team_2_name] += result[:score]
+    end
+
+    # Determined when to print from input (current line / matches / teams per match) 12 / 2 / 2 == 3
+    if curr_line % match_day_end == 0
+      match_day += 1
+      puts "Match Day #{match_day}"
+      parse_and_print_matchday(team_obj)
+      puts "\n"
+    end
+
+    curr_line += 1
   end
 end
 
