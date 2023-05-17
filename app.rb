@@ -45,6 +45,11 @@ def read_lines_global(matches, line_count)
 
   matches.each do |match|
     match_info = parse_match_info(match)
+
+    if match_info.nil? || !match_info
+      next
+    end
+
     result = determine_winner_and_score(match_info[:team_1_score], match_info[:team_2_score])
 
     if !team_obj.has_key?(match_info[:team_1_name])
@@ -90,7 +95,10 @@ def parse_match_info(match)
   team_2_name = team_2.gsub(/\d/, '').strip
   team_2_score = team_2[/\d+/]
 
-  return {
+  # Asset conditions here
+  return false if match_details.nil? || team_1_score.nil? || team_2_score.nil?
+
+  {
     team_1_name: team_1_name,
     team_1_score: team_1_score,
     team_2_name: team_2_name,
